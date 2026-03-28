@@ -1,56 +1,24 @@
 const express = require("express");
 const cors = require("cors");
-const OpenAI = require("openai");
+const bodyParser = require("body-parser");
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// 🔑 Add your API key here
-const openai = new OpenAI({
-  apiKey: "YOUR_API_KEY_HERE",
-});
-
-// TEXT ENHANCEMENT
-app.post("/enhance", async (req, res) => {
+// Example routes
+app.post("/enhance", (req, res) => {
   const { text } = req.body;
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "user",
-          content: `Improve this prompt professionally: ${text}`,
-        },
-      ],
-    });
-
-    res.json({ result: response.choices[0].message.content });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Error generating text" });
-  }
+  // Your enhancement logic here
+  res.json({ result: text.toUpperCase() });
 });
 
-// IMAGE GENERATION
-app.post("/generate-image", async (req, res) => {
+app.post("/generate-image", (req, res) => {
   const { prompt } = req.body;
-
-  try {
-    const response = await openai.images.generate({
-      model: "gpt-image-1",
-      prompt: prompt || "A beautiful futuristic city",
-      size: "1024x1024",
-    });
-
-    res.json({ image: response.data[0].url });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Error generating image" });
-  }
+  // Your image generation logic here
+  res.json({ image: "https://via.placeholder.com/300" });
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
+// ← Paste this at the END of server.js
+const PORT = process.env.PORT || 5001; // change 5000 to 5001
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
