@@ -6,19 +6,23 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Example routes
+// Root route
+app.get("/", (req, res) => {
+  res.send("Server is running ✅");
+});
+
+// Enhance text
 app.post("/enhance", (req, res) => {
   const { text } = req.body;
-  // Your enhancement logic here
-  res.json({ result: text.toUpperCase() });
+  res.json({ result: text ? text.toUpperCase() : "" });
 });
 
+// Generate image
 app.post("/generate-image", (req, res) => {
   const { prompt } = req.body;
-  // Your image generation logic here
-  res.json({ image: "https://via.placeholder.com/300" });
+  res.json({ image: "https://via.placeholder.com/300?text=" + encodeURIComponent(prompt || "No Prompt") });
 });
 
-// ← Paste this at the END of server.js
-const PORT = process.env.PORT || 5001; // change 5000 to 5001
+// Start server
+const PORT = 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
